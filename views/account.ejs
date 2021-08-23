@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Замени development.js на production.min.js -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <link rel="shortcut icon" href="https://image.flaticon.com/icons/png/512/857/857455.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/account.css" type="text/css">
+    <title>SportBook</title>
+</head>
+
+<body>
+    <img id='image' src='img/Баскетбол.jpg'>
+    <div id='layer'></div>
+    <div id='header' style='height: 7%;'></div>
+    <div id='content-container' style='margin-top: 0px;'>
+        <div id='windows-container'>
+            <div class='window' id='variants'>
+    
+            </div>
+            <div class='window' id='filters'>
+    
+            </div>
+        </div>
+    </div>
+    <script type='text/babel' src="js/search.js"></script>
+</body>
+
+</html>
