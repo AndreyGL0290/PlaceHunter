@@ -24,7 +24,7 @@ document.getElementById("submit").addEventListener("click", function (e) {
     if (formName == 'loginForm') {
         request.open("POST", "/login", true);
     } else {
-        request.open("POST", "/regestration", true);
+        request.open("POST", "/registration", true);
     }
     request.setRequestHeader("Content-Type", "application/json");
     request.addEventListener("load", function () {
