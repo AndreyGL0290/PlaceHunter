@@ -1,0 +1,94 @@
+body {
+    background-color: black;
+    margin: 0;
+}
+
+* {
+    font-family: 'Lucida Sans';
+}
+
+h2 {
+    text-align: center;
+}
+
+p {
+    margin: 0;
+    font-size: 16pt;
+    color: black;
+}
+
+.image {
+    position: fixed;
+    filter: blur(4px);
+    width: 100%;
+    height: 100%;
+}
+
+.layer {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+
+.header {
+    z-index: 1;
+    position: fixed;
+    display: inline-flex;
+    justify-content: flex-end;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    background-color: lightgrey;
+    width: 1000px;
+    height: 7%;
+}
+
+.content-container {
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    width: 1000px;
+    height: 93%;
+    background-color: white;
+}
+
+.information-container {
+    display: flex;
+    justify-content: space-around;
+    width: inherit;
+    margin-bottom: 7%;
+    height: 50%;
+}
+
+.settings-container {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+
+.settings {
+    background-color: lightgrey;
+    height: 100%;
+}
+
+.add-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
+
+.add-info-input {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+}
