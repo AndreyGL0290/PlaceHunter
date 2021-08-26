@@ -5,20 +5,96 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="homestyle.css">
+    <link rel="stylesheet" type="text/css" href="css/homestyle.css">
+    <link rel="shortcut icon" href="https://image.flaticon.com/icons/png/512/857/857455.png" type="image/x-icon">
     <title>Sportbook</title>
 </head>
 
 <body>
     <img id='image' src='img/Баскетбол.jpg'>
     <div id='layer'></div>
+    <div id='header'></div>
     <div id="content-container">
-        <div>
-            <h2>Welcome to the Sportbook</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis commodo, enim quis maximus finibus, mi orci sodales velit, mattis vestibulum velit eros in elit. Pellentesque volutpat, mi sit amet sagittis hendrerit, nisl erat semper odio, ut ultrices arcu leo vitae nisl. In imperdiet et ipsum vel blandit. Suspendisse rutrum risus et ullamcorper posuere. Ut venenatis hendrerit lacus ac tempor. Duis nec libero id elit gravida varius. In at facilisis nisl, sed cursus magna.</p>
+        <div class='error-container'>
+            <span class='error-label'></span>
+            <a id='clear' href=''>Отчистить кукисы</a>
         </div>
-        <div id='instructions'></div>
+        <div id='about-container'>
+            <div id="offers-container">
+                <div class='offer-case' style="margin-bottom: 4%;">
+                    <img class='offer-image'
+                        src='https://media.istockphoto.com/photos/cool-place-to-play-basketball-at-the-street-picture-id1149206055?k=6&m=1149206055&s=612x612&w=0&h=tl5T3IcWmc2jpgYM4E0TDqsvi_YGHeZtOI0AHgnzIZM='>
+                    <div class='offer-text'>
+                        <h2>Welcome to the Sportbook</h2>
+                        <p>Find a partner for <span class='special-word'>basketball</span> game</p>
+                        <div class='button-container'>
+                            <a class='button'>Search</a>
+                        </div>
+                    </div>
+                </div>
+                <div class='offer-case'>
+                    <img class='offer-image'
+                        src='https://media.istockphoto.com/photos/classic-soccer-ball-near-the-gray-wall-picture-id993589136?k=6&m=993589136&s=612x612&w=0&h=UYCuH2x23ne7-ckNAKj8mi1lSIyF2aBabpvJvwjq2LE='>
+                    <div class='offer-text'>
+                        <h2>Welcome to the Sportbook</h2>
+                        <p>Find a partner for <span class='special-word'>football</span> game</p>
+                        <div class='button-container'>
+                            <a class='button'>Search</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id='info'>
+                <img id="info-image"
+                    src="https://images.wallpaperscraft.ru/image/snoubord_tryuk_pryzhok_gory_ekstrim_79976_320x480.jpg">
+                <div id='info-text'>
+                    <h2>Our main rule</h2>
+                    <p>You have to be polite with every person that you found here...<br></p>
+                    <p>Even if he playing bad</p>
+                </div>
+            </div>
+        </div>
     </div>
+    <template id='account-template'>
+        <style>
+            #account-conteiner {
+                display: flex;
+                justify-content: space-around;
+                height: 64px;
+                width: 10%;
+            }
+
+            #account-img-container {
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 64px;
+                height: 64px;
+                border-radius: 50%;
+                background-color: grey;
+            }
+
+            #account-img {
+                width: 32px;
+                height: auto;
+            }
+        </style>
+        <a id='account-img-container' href='/account'>
+            <img id="account-img" src="https://image.flaticon.com/icons/png/512/561/561196.png">
+        </a>
+    </template>
+    <template id='signup-template'>
+        <style>
+            .reg {
+                letter-spacing: 0px;
+                background-color: rgba(255, 255, 255, 1);
+            }
+        </style>
+        <a class='button reg' href='/regestration'>Sign up</a>
+        <a class='button reg' href='/login'>Log in</a>
+    </template>
+    <script src="js/home.js"></script>
 </body>
 
 </html>
