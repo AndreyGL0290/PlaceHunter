@@ -19,8 +19,13 @@
   "homepage": "https://github.com/AndreyGL0290/SportBook#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.0",
+    "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "jwt-encode": "^1.0.1",
+    "mysql2": "^2.3.0",
+    "nodemailer": "^6.6.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"
