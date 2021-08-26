@@ -126,7 +126,7 @@ app.post('/registration', jsonParser, (req, res) => {
                                              })
                                              res.json('')
                                              const mailOptions = {
-                                                  from: 'andreygl2014@gmail.com',
+                                                  from: process.env.USER,
                                                   to: email,
                                                   subject: 'Sportbook regestration',
                                                   html: `<style>.button {display:inline-block;position:relative;color:black;background-color:rgba(0, 0, 0, 0);text-decoration:none;text-transform:uppercase;border:2px solid black;transition:250ms;width:280px;height:40px;line-height:40px;text-align:center;}</style>
