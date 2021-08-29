@@ -44,6 +44,21 @@ document.getElementById('clear').addEventListener('click', () => {
     request.send(data);
 });
 
+function addButtons() {
+    if (document.getElementsByClassName('button').length == 2) {
+        elem = document.createElement('div');
+        elem.id = 'entrance-container';
+        
+        tmpl = document.getElementById('signup-template');
+        elem.appendChild(tmpl.content.cloneNode(true));
+        
+        document.getElementById('header').appendChild(elem);
+    }
+    
+    document.getElementsByClassName('button')[2].addEventListener('click', allowsports);
+    document.getElementsByClassName('button')[3].addEventListener('click', allowsports);
+}
+
 function allowsports() {
     request.open("POST", "/", true);
     request.setRequestHeader("Content-Type", "application/json");
@@ -59,19 +74,4 @@ function allowsports() {
         }
     });
     request.send();
-}
-
-function addButtons() {
-    if (document.getElementsByClassName('button').length == 2) {
-        elem = document.createElement('div');
-        elem.id = 'entrance-container';
-
-        tmpl = document.getElementById('signup-template');
-        elem.appendChild(tmpl.content.cloneNode(true));
-
-        document.getElementById('header').appendChild(elem);
-    }
-
-    document.getElementsByClassName('button')[2].addEventListener('click', allowsports);
-    document.getElementsByClassName('button')[3].addEventListener('click', allowsports);
 }
