@@ -22,9 +22,9 @@ document.getElementById("submit").addEventListener("click", function (e) {
     let request = new XMLHttpRequest();
     // посылаем запрос на адрес "/login"
     if (formName == 'loginForm') {
-        request.open("POST", "/login", true);
+        request.open("POST", "/authorization/login", true);
     } else {
-        request.open("POST", "/registration", true);
+        request.open("POST", "/authorization/registration", true);
     }
     request.setRequestHeader("Content-Type", "application/json");
     request.addEventListener("load", function () {
