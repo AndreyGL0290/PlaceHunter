@@ -24,6 +24,7 @@ router.use('/css', express.static(__dirname + 'public/css'));
 router.use('/img', express.static(__dirname + 'public/img'));
 router.use('/js', express.static(__dirname + 'public/js'));
 
+// Default middleware function
 router.use(function sportType(req, res, next) {
     next();
 });
