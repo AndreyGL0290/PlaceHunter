@@ -1,12 +1,12 @@
 // Import
-const { checkNoTokenCookie, checkTokenCookie, checkTokenDBToURL } = require('./middlewares/checktoken');
+const {checkNoTokenCookie, checkTokenCookie, checkTokenDBToURL } = require('./middlewares/checktoken');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const sport = require('./routes/sport');
 const auth = require('./routes/auth');
 const express = require('express');
 const dotenv = require('dotenv');
 const mysql = require('mysql2');
-
 // Reads .env file
 dotenv.config()
 
@@ -33,6 +33,7 @@ app.use(express.static('public'));
 app.use('/css', express.static(__dirname + 'public/css'));
 app.use('/img', express.static(__dirname + 'public/img'));
 app.use('/js', express.static(__dirname + 'public/js'));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/sport', sport);
 app.use('/authorization', auth);
 app.use(cookieParser());
@@ -44,17 +45,7 @@ app.set('view engine', 'ejs');
 // Send information from server to client
 // When we come to the site we render home.ejs file
 app.get('', (req, res) => {
-     res.cookie('test', 123, { maxAge: 60000 * 5, path: 'http://localhost:8080/', httpOnly: true });
      res.render('home');
-})
-
-app.get('/account', checkTokenCookie, (req, res) => {
-     res.render('account');
-})
-
-app.get('/confirm', checkNoTokenCookie, checkTokenDBToURL, (token, req, res, next) => {
-     res.cookie('access_token', token, { maxAge: 3600000 * 8, path: 'http://localhost:8080/', httpOnly: true });
-     res.render('confirm');
 })
 
 // Getting information from client and also send him some response
@@ -77,9 +68,18 @@ app.post('', jsonParser, (req, res) => {
      });
 })
 
-app.post('/account', (req, res) => {
-
+app.get('/account', checkTokenCookie, (req, res) => {
+     res.render('account');
 })
+
+app.post('/account', (req, res) => {
+     
+})
+
+app.get('/confirm', checkNoTokenCookie, checkTokenDBToURL, (token, req, res, next) => {
+     res.cookie('access_token', token, { maxAge: 3600000 * 8, path: 'http://localhost:8080/', httpOnly: true });
+     res.redirect('/');
+ })
 
 // Listen on port 8080
 app.listen(port);
