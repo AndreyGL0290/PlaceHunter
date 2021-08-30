@@ -12,7 +12,7 @@ document.getElementsByClassName("add-info-button")[0].addEventListener("click", 
     request.addEventListener("load", function () {
         // Получаем и парсим ответ сервера
         let receivedData = JSON.parse(request.response);
-        
+
     })
     request.send(data);
 }, true);
