@@ -72,8 +72,14 @@ app.get('/account', checkTokenCookie, (req, res) => {
      res.render('account');
 })
 
-app.post('/account', (req, res) => {
-     
+app.post('/account', jsonParser, (req, res) => {
+     console.log(req.body)
+     if (req.body.newPref) {
+          // Добавить юзеру preference
+     }
+     else if (req.body.name){
+          // Занести add_info в дб
+     }
 })
 
 app.get('/confirm', checkNoTokenCookie, checkTokenDBToURL, (token, req, res, next) => {
