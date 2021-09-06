@@ -77,6 +77,14 @@ p {
     height: 100%;
 }
 
+.button-container {
+    text-align: center;
+}
+
+.card {
+    width: 100%;
+}
+
 .add-info {
     display: flex;
     justify-content: space-between;
