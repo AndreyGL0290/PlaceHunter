@@ -73,19 +73,17 @@ app.get('/account', checkTokenCookie, (req, res) => {
 })
 
 app.post('/account', jsonParser, (req, res) => {
-     console.log(req.body)
-     if (req.body.newPref) {
-          // Добавить юзеру preference
-     }
-     else if (req.body.name){
-          // Занести add_info в дб
+     if (req.body.name){
+          con.query(`UPDATE add_info SET user_name='${req.body.name}', acc_image='${req.body.avatar}', age=${req.body.age} WHERE token='${req.cookies.access_token}'`, (err, result) => {
+               if (err) throw err;
+          });
      }
 })
 
 app.get('/confirm', checkNoTokenCookie, checkTokenDBToURL, (token, req, res, next) => {
      res.cookie('access_token', token, { maxAge: 3600000 * 8, path: 'http://localhost:8080/', httpOnly: true });
      res.redirect('/');
- })
+})
 
 // Listen on port 8080
 app.listen(port);
