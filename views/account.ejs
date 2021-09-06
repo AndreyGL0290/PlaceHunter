@@ -7,6 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="https://image.flaticon.com/icons/png/512/857/857455.png" type="image/x-icon">
     <link rel="stylesheet" href="css/account.css" type="text/css">
+
+    <!-- Замени development.js на production.min.js -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
     <title>SportBook</title>
 </head>
 
@@ -16,20 +24,6 @@
     <div class='header'></div>
     <div class='content-container' style='margin-top: 0px;'>
         <div class='information-container'>
-            <div class='settings-container'>
-                <h2>Виды спорта<br>(обязательно)</h2>
-                <div class="settings">
-                    <div class="plus-button-container">
-                        <a class="plus-button" href="/here/should/be/link">Плюс</a>
-                    </div>
-                    <div class="cards-container">
-
-                    </div>
-                    <div class="submit-container">
-                        <button type="submit">Подтвердить</button>
-                    </div>
-                </div>
-            </div>
             <div class="settings-container">
                 <h2>Личная информация<br>(не обязательно)</h2>
                 <div class="settings">
@@ -58,7 +52,6 @@
         document.getElementsByClassName('content-container')[0].style.marginTop = headerHeight;
     </script>
     <script src="js/accChanges.js"></script>
-    <script src="js/accPrefers.js"></script>
 </body>
 
 </html>
