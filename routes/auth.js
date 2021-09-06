@@ -97,7 +97,6 @@ router.post('/registration', jsonParser, (req, res) => {
                                     if (err) throw err;
                                     con.query(`INSERT INTO add_info (token) VALUES ('${jwt}')`, (err, result) => {
                                         if (err) throw err;
-
                                     })
                                     res.json('')
                                     const mailOptions = {
