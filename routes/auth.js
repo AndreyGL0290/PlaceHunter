@@ -84,46 +84,36 @@ router.post('/registration', jsonParser, (req, res) => {
     if (validator.isEmail(email)) {
         if (schema.validate(password)) {
             if (req.body.password1 == req.body.password2) {
-                // Pushes heshed password and email to BD
+                // Хэширует пароль
                 bcrypt.genSalt(saltRounds, function (err, salt) {
                     bcrypt.hash(password, salt, function (err, hash) {
                         if (err) throw err;
-                        con.query(`SELECT email token FROM accounts WHERE email='${email}'`, function (err, result) {
+                        con.query(`SELECT token FROM accounts WHERE email='${email}'`, function (err, result) {
                             if (err) throw err;
-
-                            if (result[0] == undefined) {
+                            // Если у юзера нет токена
+                            if (result[0] === undefined) {
                                 const jwt = sign({ email: email }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES });
-                                con.query(`INSERT INTO accounts (email, password, token) VALUES ('${email}', '${hash}', '${jwt}')`, function (err, result) {
-                                    if (err) throw err;
-                                    con.query(`INSERT INTO add_info (token) VALUES ('${jwt}')`, (err, result) => {
-                                        if (err) throw err;
-                                        con.query(`UPDATE add_info SET preferences=JSON_OBJECT('sport', '', 'level', '') WHERE token='${jwt}'`, (err, result) => {
-                                            if (err) throw err;
-                                        })
-                                    })
-                                    res.json('')
-                                    const mailOptions = {
-                                        from: process.env.USER,
-                                        to: email,
-                                        subject: 'Sportbook regestration',
-                                        html: `<style>.button {display:inline-block;position:relative;color:black;background-color:rgba(0, 0, 0, 0);text-decoration:none;text-transform:uppercase;border:2px solid black;transition:250ms;width:280px;height:40px;line-height:40px;text-align:center;}</style>
+                                res.json('')
+                                const mailOptions = {
+                                    from: process.env.USER,
+                                    to: email,
+                                    subject: 'Sportbook regestration',
+                                    html: `<style>.button {display:inline-block;position:relative;color:black;background-color:rgba(0, 0, 0, 0);text-decoration:none;text-transform:uppercase;border:2px solid black;transition:250ms;width:280px;height:40px;line-height:40px;text-align:center;}</style>
                                                   <p>Ваша электронная почта была использована для регестрации на сайте sportbook.com.<br>
                                                        Если это не вы пытаетесь зарегестрироваться на нашем сайте, то проигнорируте это письмо<br>
                                                        Если это вы хотите зарегестрироваться на нашем сайте, то нажмите кнопку "Окончить регестрацию"</p>
-                                                       <a class='button' href='http://localhost:8080/confirm?token=${jwt}'>Окончить регестрацию</a>`,
+                                                       <a class='button' href='http://localhost:8080/confirm?token=${jwt}&f=${hash}&e=${email}'>Окончить регестрацию</a>`,
+                                }
+                                transporter.sendMail(mailOptions, function (error, info) {
+                                    if (error) {
+                                        console.log(error);
+                                    } else {
+                                        console.log('Email sent: ' + info.response);
                                     }
-                                    transporter.sendMail(mailOptions, function (error, info) {
-                                        if (error) {
-                                            console.log(error);
-                                        } else {
-                                            console.log('Email sent: ' + info.response);
-                                        }
-                                    });
-                                })
-
+                                });
+                            // Если у юзера есть токен
                             } else {
-                                if (result[0].token === undefined || result[0].token === null) res.json('Вам уже было отправлено письмо');
-                                else { res.json('К этой почте уже привязан аккаунт') }
+                                res.json('К этой почте уже привязан аккаунт')
                             }
                         });
                     });
@@ -135,7 +125,7 @@ router.post('/registration', jsonParser, (req, res) => {
             let errorList = schema.validate(password, { list: true });
             let errorText;
             for (let props in schemaCheck) {
-                errorList.forEach(function(item){
+                errorList.forEach(function (item) {
                     if (item == props) {
                         errorText = schemaCheck[props];
                     }
