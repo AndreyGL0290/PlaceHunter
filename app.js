@@ -1,5 +1,5 @@
 // Import
-const {checkNoTokenCookie, checkTokenCookie, checkTokenDBToURL } = require('./middlewares/checktoken');
+const { checkNoTokenCookie, checkTokenCookie, checkTokenDBToURL } = require('./middlewares/checktoken');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const sport = require('./routes/sport');
@@ -73,14 +73,26 @@ app.get('/account', checkTokenCookie, (req, res) => {
 })
 
 app.post('/account', jsonParser, (req, res) => {
-     if (req.body.name){
+     if (req.body.name) {
           con.query(`UPDATE add_info SET user_name='${req.body.name}', acc_image='${req.body.avatar}', age=${req.body.age} WHERE token='${req.cookies.access_token}'`, (err, result) => {
                if (err) throw err;
           });
      }
 })
-
-app.get('/confirm', checkNoTokenCookie, checkTokenDBToURL, (token, req, res, next) => {
+function toBD(req, res, next) {
+     console.log(req.query)
+     con.query(`INSERT INTO accounts (email, password, token) VALUES ('${req.query.e}', '${req.query.f}', '${req.query.token}')`, function (err, result) {
+          if (err) throw err;
+          con.query(`INSERT INTO add_info (token) VALUES ('${req.query.token}')`, (err, result) => {
+               if (err) throw err;
+               con.query(`UPDATE add_info SET preferences=JSON_OBJECT('sport', '', 'level', '') WHERE token='${req.query.token}'`, (err, result) => {
+                    if (err) throw err;
+                    next()
+               })
+          })
+     })
+}
+app.get('/confirm', toBD, checkNoTokenCookie, checkTokenDBToURL, (token, req, res, next) => {
      res.cookie('access_token', token, { maxAge: 3600000 * 8, path: 'http://localhost:8080/', httpOnly: true });
      res.redirect('/');
 })
