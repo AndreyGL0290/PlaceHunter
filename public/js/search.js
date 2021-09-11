@@ -2,108 +2,149 @@
 const headerHeight = document.getElementById('header').clientHeight + 'px';
 document.getElementById('content-container').style.marginTop = headerHeight;
 
+let recievedData;
+
 // Проверяем есть ли у браузера пользователя возможность передовать его местоположение
 let geo = false;
 if (navigator.geolocation) geo = true;
 
-// Данные аккаунта 
-let avatar = '';
-let userName = '';
-let age = '';
-let sport = '';
-let level = '';
-
-// Сначала запросим информацию с сервера
+// Первый запрос нужен чтобы получить списки видов спорта и уровней
 const request = new XMLHttpRequest;
 request.open('POST', '', true);
 request.setRequestHeader("Content-Type", "application/json");
 request.addEventListener("load", function () {
-    let recievedData = JSON.parse(request.response);
+    recievedData = JSON.parse(request.response);
+    const sports = recievedData.sports;
+    const levels = recievedData.levels;
 
-    // Данные аккаунта
-    if (recievedData.error === undefined) {
-        avatar = recievedData.avatar1;
-        userName = recievedData.name1;
-        age = recievedData.age1;
-        sport = recievedData.sport1;
-        level = recievedData.level1;
-    }
-
-    // По сути осталось сделать только обновление вариантов после нажатия кнопки "Подтвердить" в карточке предпочтений
-    
-    const app = (
-        <>
-            <Usercard avatar={avatar} userName={userName} age={age} sport={sport} level={level} />
-        </>
-    )
-
-    // Если нет совпадений, то надо нарисовать карточку предпочтений, 
-    if (recievedData.sport1 === undefined && recievedData.sport !== undefined) {
-        document.getElementsByClassName("filter-error")[0].textContent = recievedData.error;
-        console.log(1)
-        // Загрузка карточки
-        loadPreferCard(recievedData.sport, recievedData.level);
-    }
-    // Если есть совпадения, то нам надо обновить их
-    else if (recievedData.sport1 === undefined && recievedData.sport !== undefined) {
-
-        console.log(2)
-
-        // Загрузка карточки
-        loadPreferCard(recievedData.sport, recievedData.level);
-
-        ReactDOM.render(<App sport={recievedData.sport} level={recievedData.level} avatar={recievedData.avatar} name={recievedData.name} age={recievedData.age} />, document.getElementById('variants'));
-    }
-
-    // Если в гет запросе не указан спорт
-    if (recievedData.sportType === undefined && recievedData.sport !== undefined) {
-
-        // Загрузка карточки
-        loadPreferCard(recievedData.sport, recievedData.level);
-
-        ReactDOM.render(app, document.getElementById('variants'));
-    }
-    // Если в гет запросе указан спорт
-    else if (recievedData.sportType !== undefined) {
-
-        // Загрузка карточки
-        loadPreferCard(recievedData.sportType, 'Любой');
-
-        const request = new XMLHttpRequest;
-        request.open('POST', '', true);
-        request.setRequestHeader("Content-Type", "application/json");
-        request.send(JSON.stringify({ sport: recievedData.sportType, level: 'Любой' }));
-
-        ReactDOM.render(app, document.getElementById('variants'));
-    }
-})
-
-request.send(JSON.stringify({ startSettings: true }));
-
-
-function loadPreferCard(sport, level) {
-    // Имя отлично от стандартного request так как node путается в именах переменных среди двух запросов посланных почти одновременно
+    // Второй запрос нужен чтобы определить как перешел user на эту страницу (по ссылке с указанным видом спорта в GET запросе или нет)
     const request1 = new XMLHttpRequest;
-
     request1.open('POST', '', true);
     request1.setRequestHeader("Content-Type", "application/json");
     request1.addEventListener("load", function () {
-        let recievedData = JSON.parse(request1.response);
+        recievedData = JSON.parse(request1.response);
+        // Если перешли по ссылке с уже указанным видом спорта в GET запросе
+        const sportType = recievedData.sportType;
+        if (sportType) {
+            loadPreferCard(sports, levels, sportType, 'Любой', () => {
+                // Выделять блок красным если нет совпадений, зеленым если есть совпадения
+                document.getElementsByClassName('card')[0].style.backgroundColor = '#90ee90';
+            });
+            // Сделать поиск
 
-        const app1 = (
-            <>
-                <Prefcard sports={recievedData.sports} levels={recievedData.levels} />
-            </>
-        );
 
-        ReactDOM.render(app1, document.getElementsByClassName('cards-container')[0]);
+        }
+        // Если зашли на страницу без указанного вида спорта в GET запросе
+        else {
+            // Делаем запрос с целью узнать есть ли информация о предпочтениях человека в базе данных
+            const request2 = new XMLHttpRequest;
+            request2.open('POST', '', true);
+            request2.setRequestHeader("Content-Type", "application/json");
+            request2.addEventListener("load", function () {
+                recievedData = JSON.parse(request2.response);
+                const sport = recievedData.sport;
+                const level = recievedData.level;
+                // Если спорт не указан у user'а в БД
+                if (recievedData.error) {
+                    loadPreferCard(sports, levels, '', '', () => { });
+                    document.getElementsByClassName('filter-error')[0].textContent = 'Введите обязательные фильтры';
+                }
+                // Если спорт действительно есть у user'а в БД
+                else {
+                    loadPreferCard(sports, levels, sport, level, () => {
+                        document.getElementsByClassName('card')[0].style.backgroundColor = '#90ee90';
+                    });
 
-        document.getElementsByClassName("card-input")[0].value = sport;
-        document.getElementsByClassName("card-input")[1].value = level;
-        document.getElementsByClassName('card')[0].style.backgroundColor = '#90ee90';
+                    // Если есть совпадения
+                    if (recievedData.matches.length !== 0) {
+                        // Выводим совпадения на экран
+                        loadUserCard(recievedData.matches[0].user_name, recievedData.matches[0].age, recievedData.matches[0].acc_image, recievedData.matches[0].sport, recievedData.matches[0].game_level);
+                    }
+                    // Если НЕТ совпадений
+                    else {
+                        loadUserCard('', '', '', '', '', 'Совпадений не найдено');
+                    }
+                }
+            })
+
+            request2.send(JSON.stringify({ getPreferences: true }));
+        }
     })
+    request1.send();
 
-    request1.send(JSON.stringify({ pref: true }));
+    // При нажатии на кнопку смены фильтров менять их в БД (если фильтры небыли изменены, то можно их и не менять)
+    // Также нужно проверять валидность введеных значений
+    let submit = document.getElementById('submit');
+    submit.addEventListener('click', function (e) {
+        e.preventDefault();
+        let formName = document.getElementsByClassName('form')[0].getAttribute('name');
+        const updateSport = document.forms[formName].elements['sport'].value;
+        const updateLevel = document.forms[formName].elements['level'].value;
+
+        const request3 = new XMLHttpRequest;
+        request3.open('POST', '', true);
+        request3.setRequestHeader("Content-Type", "application/json");
+        request3.addEventListener("load", function () {
+            let recievedData = JSON.parse(request3.response);
+            setTimeout(()=>{}, 100);
+            // Если есть совпадения
+            if (recievedData.matches.length !== 0) {
+                // Выводим совпадения на экран
+                loadUserCard(recievedData.matches[0].user_name, recievedData.matches[0].age, recievedData.matches[0].acc_image, recievedData.matches[0].sport, recievedData.matches[0].game_level);
+            }
+            // Если НЕТ совпадений
+            else {
+                loadUserCard('', '', '', '', '', 'Совпадений не найдено');
+            }
+        })
+        // Если значения введенные юзером есть в списках допустимых значений, то отправляем их в БД через сервер
+        if (sports.includes(updateSport) && levels.includes(updateLevel)) request3.send(JSON.stringify({ getPreferences: true, updatePreferences: true, sport: updateSport, level: updateLevel }));
+        // Иначе отправляем дефолтные ''
+        else { request3.send(JSON.stringify({ getPreferences: true, updatePreferences: true, sport: '', level: '' })); }
+    }, true);
+
+})
+
+request.send(JSON.stringify({ getLists: true }));
+
+
+
+// Сделать перезагрузку вариантов по нажатию кнопки
+function loadUserCard(name, age, avatar, sport, level, error) {
+    if (!error) {
+        class App extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = { name: props.name, age: props.age, avatar: props.avatar, sport: props.sport, level: props.level };
+            }
+
+            // componentDidMount() {
+            //     this.setState({ name: this.props.name, age: this.props.age, avatar: this.props.avatar, sport: this.props.sport, level: this.props.level });
+            // }
+
+            render() {
+                return (
+                    <div className='usercard-container'>
+                        <Usercard userName={this.state.name} age={this.state.age} avatar={this.state.avatar} sport={this.state.sport} level={this.state.level} />
+                    </div>)
+            }
+        }
+
+        ReactDOM.render(<App name={name} age={age} avatar={avatar} sport={sport} level={level} />, document.getElementById('variants'));
+    } else {
+        ReactDOM.render(<div className="filter-error-container"><p className="filter-error">{error}</p></div>, document.getElementById('variants'));
+    }
+}
+
+function loadPreferCard(sports, levels, sport, level, callback) {
+    const app = (
+        <Prefcard sports={sports} levels={levels} sport={sport} level={level} />
+    );
+
+    ReactDOM.render(app, document.getElementsByClassName('cards-container')[0]);
+
+    // Меняет DOM элементы страницы после их инициализации
+    callback();
 }
 
 
@@ -115,17 +156,17 @@ function Prefcard(params) {
         <div className="card">
             <form name="direction" className="form">
                 <label className="card-text">Вид спорта
-                    <input list="sport" className="card-input" name="sport" />
+                    <input list="sport" className="card-input" name="sport" defaultValue={params.sport} />
                 </label>
                 <datalist id="sport">
-                    <Create_datalist n={params.sports.length} list={params.sports} />
+                    <Create_datalist length={params.sports.length} list={params.sports} />
                 </datalist>
 
                 <label className="card-text">Уровень игры
-                    <input list="level" className="card-input" name="level" />
+                    <input list="level" className="card-input" name="level" defaultValue={params.level} />
                 </label>
                 <datalist id="level">
-                    <Create_datalist n={params.levels.length} list={params.levels} />
+                    <Create_datalist length={params.levels.length} list={params.levels} />
                 </datalist>
             </form>
         </div>
@@ -134,9 +175,9 @@ function Prefcard(params) {
 
 function Create_datalist(params) {
     return (
-        <>
-            {[...Array(params.n)].map((n, i) => <option key={params.list[i]}>{params.list[i]}</option>)}
-        </>
+        <div>
+            {[...Array(params.length)].map((n, i) => <option key={params.list[i]}>{params.list[i]}</option>)}
+        </div>
     )
 }
 
