@@ -19,7 +19,7 @@ document.getElementById("submit").addEventListener("click", function (e) {
     } else {
         data = JSON.stringify({ email: email, password1: password1 });
     }
-    let request = new XMLHttpRequest();
+    let request = new XMLHttpRequest;
     // посылаем запрос на адрес "/login"
     if (formName == 'loginForm') {
         request.open("POST", "/authorization/login", true);
