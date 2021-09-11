@@ -12,10 +12,6 @@ document.getElementsByClassName("add-info-button")[0].addEventListener("click", 
     let request = new XMLHttpRequest;
     request.open('POST', '/account', true);
     request.setRequestHeader("Content-Type", "application/json");
-    request.addEventListener("load", function () {
-        // Получаем и парсим ответ сервера
-        let receivedData = JSON.parse(request.response);
-
-    })
+    request.addEventListener("load", function () { })
     request.send(data);
 }, true);
