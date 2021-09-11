@@ -58,11 +58,11 @@ request.addEventListener("load", function () {
                     // Если есть совпадения
                     if (recievedData.matches.length !== 0) {
                         // Выводим совпадения на экран
-                        loadUserCard(recievedData.matches[0].user_name, recievedData.matches[0].age, recievedData.matches[0].acc_image, recievedData.matches[0].sport, recievedData.matches[0].game_level);
+                        loadUserCard(recievedData.matches);
                     }
                     // Если НЕТ совпадений
                     else {
-                        loadUserCard('', '', '', '', '', 'Совпадений не найдено');
+                        loadUserCard(recievedData.mathes, 'Совпадений не найдено');
                     }
                 }
             })
@@ -86,15 +86,14 @@ request.addEventListener("load", function () {
         request3.setRequestHeader("Content-Type", "application/json");
         request3.addEventListener("load", function () {
             let recievedData = JSON.parse(request3.response);
-            setTimeout(()=>{}, 100);
             // Если есть совпадения
             if (recievedData.matches.length !== 0) {
                 // Выводим совпадения на экран
-                loadUserCard(recievedData.matches[0].user_name, recievedData.matches[0].age, recievedData.matches[0].acc_image, recievedData.matches[0].sport, recievedData.matches[0].game_level);
+                loadUserCard(recievedData.matches);
             }
             // Если НЕТ совпадений
             else {
-                loadUserCard('', '', '', '', '', 'Совпадений не найдено');
+                loadUserCard(recievedData.matches, 'Совпадений не найдено');
             }
         })
         // Если значения введенные юзером есть в списках допустимых значений, то отправляем их в БД через сервер
@@ -110,12 +109,12 @@ request.send(JSON.stringify({ getLists: true }));
 
 
 // Сделать перезагрузку вариантов по нажатию кнопки
-function loadUserCard(name, age, avatar, sport, level, error) {
+function loadUserCard(matches, error) {
     if (!error) {
         class App extends React.Component {
             constructor(props) {
                 super(props);
-                this.state = { name: props.name, age: props.age, avatar: props.avatar, sport: props.sport, level: props.level };
+                this.state = { matches: props.matches };
             }
 
             // componentDidMount() {
@@ -125,12 +124,12 @@ function loadUserCard(name, age, avatar, sport, level, error) {
             render() {
                 return (
                     <div className='usercard-container'>
-                        <Usercard userName={this.state.name} age={this.state.age} avatar={this.state.avatar} sport={this.state.sport} level={this.state.level} />
+                        {[...Array(this.props.matches.length)].map((n, i) => <Usercard name={this.state.matches[i].user_name} age={this.state.matches[i].age} avatar={this.state.matches[i].acc_image} sport={this.state.matches[i].sport} level={this.state.matches[i].game_level} key={i}/>)}
                     </div>)
             }
         }
 
-        ReactDOM.render(<App name={name} age={age} avatar={avatar} sport={sport} level={level} />, document.getElementById('variants'));
+        ReactDOM.render(<App matches={matches} />, document.getElementById('variants'));
     } else {
         ReactDOM.render(<div className="filter-error-container"><p className="filter-error">{error}</p></div>, document.getElementById('variants'));
     }
@@ -151,32 +150,32 @@ function loadPreferCard(sports, levels, sport, level, callback) {
 
 // React functions
 
-function Prefcard(params) {
+function Prefcard(props) {
     return (
         <div className="card">
             <form name="direction" className="form">
                 <label className="card-text">Вид спорта
-                    <input list="sport" className="card-input" name="sport" defaultValue={params.sport} />
+                    <input list="sport" className="card-input" name="sport" defaultValue={props.sport} />
                 </label>
                 <datalist id="sport">
-                    <Create_datalist length={params.sports.length} list={params.sports} />
+                    <Create_datalist length={props.sports.length} list={props.sports} />
                 </datalist>
 
                 <label className="card-text">Уровень игры
-                    <input list="level" className="card-input" name="level" defaultValue={params.level} />
+                    <input list="level" className="card-input" name="level" defaultValue={props.level} />
                 </label>
                 <datalist id="level">
-                    <Create_datalist length={params.levels.length} list={params.levels} />
+                    <Create_datalist length={props.levels.length} list={props.levels} />
                 </datalist>
             </form>
         </div>
     )
 }
 
-function Create_datalist(params) {
+function Create_datalist(props) {
     return (
         <div>
-            {[...Array(params.length)].map((n, i) => <option key={params.list[i]}>{params.list[i]}</option>)}
+            {[...Array(props.length)].map((n, i) => <option key={props.list[i]}>{props.list[i]}</option>)}
         </div>
     )
 }
@@ -188,7 +187,7 @@ function Usercard(props) {
                 <img className="search-avatar" src={props.avatar} alt='Аватар' />
             </div>
             <div className="card-info">
-                <p className="user-name">Имя: {props.userName}</p>
+                <p className="user-name">Имя: {props.name}</p>
                 <p className="user-age">Возраст: {props.age}</p>
                 <p className="user-sport">Игра: {props.sport}</p>
                 <p className="user-level">Уровень: {props.level}</p>
