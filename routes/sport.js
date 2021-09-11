@@ -47,54 +47,75 @@ let levels = ['Профи', 'Хорошо', 'Средне', 'Плохо', 'Уж�
 // Для сообщения обеих и более сторон использовать уже созданные сервисы по типу телеграмма и других соц. сетей
 // На submitpref перезагружаьт страницу (динамически добавлять элементы)
 router.post('', jsonParser, (req, res) => {
-    
-    if (req.body.startSettings) {
-        // Смотрим какие фильтры уже есть
-        con.query(`SELECT sport, game_level, user_name, acc_image, age FROM add_info WHERE token='${req.cookies.access_token}'`, (err, result) => {
-            if (err) throw err;
-            if (result !== undefined) {
-                if (result[0].sport !== undefined && result[0].game_level !== undefined) {
-                    if (result[0].game_level == 'Любой') {
-                        con.query(`SELECT sport, game_level, user_name, acc_image, age FROM add_info WHERE token!='${req.cookies.access_token}' AND sport='${result[0].sport}'`, (err, result1) => {
-                            if (err) throw err;
-                            if (result1[0] === undefined) {
-                                res.json({ sport: result[0].sport, level: result[0].game_level, name: result[0].user_name, avatar: result[0].acc_image, age: result[0].age, sportType: req.query.type, error: 'Нет совпадений' });
-                            } else {
-                                res.json({ sport: result[0].sport, level: result[0].game_level, name: result[0].user_name, avatar: result[0].acc_image, age: result[0].age, sportType: req.query.type, sport1: result1[0].sport, level1: result1[0].game_level, name1: result1[0].user_name, avatar1: result1[0].acc_image, age1: result1[0].age, sportType1: req.query.type })
-                            }
-                        });
-                    } else {
-                        con.query(`SELECT sport, game_level, user_name, acc_image, age FROM add_info WHERE token!='${req.cookies.access_token}' AND sport='${result[0].sport}' AND game_level='${result[0].game_level}'`, (err, result1) => {
-                            if (err) throw err;
-                            if (result1[0] === undefined) {
-                                res.json({ sport: result[0].sport, level: result[0].game_level, name: result[0].user_name, avatar: result[0].acc_image, age: result[0].age, sportType: req.query.type, error: 'Нет совпадений' });
-                            } else {
-                                res.json({ sport: result[0].sport, level: result[0].game_level, name: result[0].user_name, avatar: result[0].acc_image, age: result[0].age, sportType: req.query.type, sport1: result1[0].sport, level1: result1[0].game_level, name1: result1[0].user_name, avatar1: result1[0].acc_image, age1: result1[0].age, sportType1: req.query.type })
-                            }
-                        });
-                    }
-                } else {
-                    res.json({ sport: result[0].sport, level: result[0].game_level, name: result[0].user_name, avatar: result[0].acc_image, age: result[0].age, sportType: req.query.type });
-                }
-            } else {
-                res.json({error: 'Ваши фильтры не настроены либо с ними что-то не так'});
-            }
-        })
+    // Ответ на самый первый запрос который передаёт списки вариантов
+    if (req.body.getLists) {
+        return res.json({ sports: sports, levels: levels });
     }
 
-    if (req.body.sport && req.body.level) {
-        con.query(`UPDATE add_info SET preferences = JSON_OBJECT('sport', '${req.body.sport}', 'level', '${req.body.level}') WHERE token='${req.cookies.access_token}'`, (err, result) => {
+    // Если юзер нажал на кнопку обновления предпочтений, то обновляем предпочтения
+    if (req.body.updatePreferences) {
+        con.query(`UPDATE add_info SET preferences=JSON_OBJECT('sport', '${req.body.sport}', 'level', '${req.body.level}') WHERE token='${req.cookies.access_token}'`, (err, result1) => {
             if (err) throw err;
+        });
+    }
+
+    // Отвечаем на запрос, цель которого узнать есть ли информация о предпочтениях человека в базе данных
+    if (req.body.getPreferences) {
+        // Делаем запрос в базу данных (user должен пройти аутентификацию)
+        con.query(`SELECT sport, game_level FROM add_info WHERE token='${req.cookies.access_token}'`, (err, result) => {
+            if (err) throw err;
+
+            // Если у юзера нет предпочтений, отправляем ошибку
+            if (result[0].sport === '' || result[0].sport === undefined) return res.json({ error: true });
+
+            // Если у юзера есть предпочтения, то сразу находим совпадения
+            // Уровень игры - любой, спорт - НЕ любой
+
+            else if (result[0].game_level === 'Любой' && result[0].sport !== 'Любой') {
+                con.query(`SELECT age, user_name, acc_image, sport, game_level FROM add_info WHERE token<>'${req.cookies.access_token}' AND sport='${result[0].sport}' LIMIT 5`, (err, result1) => {
+                    if (err) throw err
+                    return res.json({ sport: result[0].sport, level: result[0].game_level, matches: result1 });
+                });
+                return
+            }
+            // Уровень игры - НЕ любой, спорт - любой
+            else if (result[0].game_level !== 'Любой' && result[0].sport === 'Любой') {
+                con.query(`SELECT age, user_name, acc_image, sport, game_level FROM add_info WHERE token<>'${req.cookies.access_token}' AND game_level='${result[0].game_level}' LIMIT 5`, (err, result1) => {
+                    if (err) throw err
+                    return res.json({ sport: result[0].sport, level: result[0].game_level, matches: result1 });
+                });
+                return
+            }
+            // Уровень игры - любой, спорт - любой
+            else if (result[0].game_level === 'Любой' && result[0].sport === 'Любой') {
+                con.query(`SELECT age, user_name, acc_image, sport, game_level FROM add_info WHERE token<>'${req.cookies.access_token}' LIMIT 5`, (err, result1) => {
+                    if (err) throw err
+                    return res.json({ sport: result[0].sport, level: result[0].game_level, matches: result1 });
+                });
+                return
+            }
+            // Уровень игры - НЕ любой, спорт - НЕ любой
+            else if (result[0].game_level !== 'Любой' && result[0].sport !== 'Любой') {
+                con.query(`SELECT age, user_name, acc_image, sport, game_level FROM add_info WHERE token<>'${req.cookies.access_token}' AND sport='${result[0].sport}' AND game_level='${result[0].game_level}' LIMIT 5`, (err, result1) => {
+                    if (err) throw err
+                    return res.json({ sport: result[0].sport, level: result[0].game_level, matches: result1 });
+                });
+                return
+            }
         })
+        return
     }
-    
-    if (req.body.pref) {
-        res.json({ sports: sports, levels: levels, SportType: req.query.type });
+
+    // Эта часть должна быть последней
+    // Если мы перешли по ссылке в которой уже указан вид спорта в GET запросе
+    if (req.query.type) {
+        return res.json({ sportType: req.query.type });
     }
-    
-    if (req.body.submitpref) {
-        res.json({ sports: sports, levels: levels });
+    // Если мы просто зашли на страницу (НЕ по ссылке с указанным видом спорта в GET запросе)
+    else {
+        return res.json({ sportType: false });
     }
+
 })
 
 module.exports = router;
