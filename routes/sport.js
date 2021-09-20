@@ -109,7 +109,10 @@ router.post('', jsonParser, (req, res) => {
     // Эта часть должна быть последней
     // Если мы перешли по ссылке в которой уже указан вид спорта в GET запросе
     if (req.query.type) {
-        return res.json({ sportType: req.query.type });
+        con.query(`SELECT age, user_name, acc_image, game_level FROM add_info WHERE token<>'${req.cookies.access_token}' AND sport='${req.query.type}'`, (err, result) => {
+            if (err) throw err
+            return res.json({ sportType: req.query.type, matches: result});
+        })
     }
     // Если мы просто зашли на страницу (НЕ по ссылке с указанным видом спорта в GET запросе)
     else {
