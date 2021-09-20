@@ -9,9 +9,6 @@
     <!-- Замени development.js на production.min.js -->
     <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-
-    <!-- Instal JSX compiler instead -->
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     
     <link rel="shortcut icon" href="https://image.flaticon.com/icons/png/512/857/857455.png" type="image/x-icon">
     <link rel="stylesheet" href="css/sport.css" type="text/css">
@@ -36,15 +33,24 @@
                         <div class="cards-container">
     
                         </div>
-                        <div class="button-container">
-                            <button type="submit" id='submit'>Подтвердить</button>
+                    </div>
+                </div>
+                <div class="settings-container">
+                    <h2>Приблизительное метсоположение</h2>
+                    <div class="settings">
+                        <div class="cards-container">
+    
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="button-container">
+                <button type="submit" id='submit'>Подтвердить</button>
+            </div>
         </div>
     </div>
-    <script type='text/babel' src="js/search.js"></script>
+    <script type='module' src="js/search.js"></script>
+    <script type='module' src="react/search.js"></script>
 </body>
 
 </html>
