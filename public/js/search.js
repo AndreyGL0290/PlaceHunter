@@ -30,7 +30,7 @@ request.addEventListener("load", function () {
                 // Выделять блок красным если нет совпадений, зеленым если есть совпадения
                 document.getElementsByClassName('card')[0].style.backgroundColor = '#90ee90';
             });
-            // Сделать поиск
+            loadUserCard(recievedData.matches)
 
 
         }
@@ -116,10 +116,6 @@ function loadUserCard(matches, error) {
                 super(props);
                 this.state = { matches: props.matches };
             }
-
-            // componentDidMount() {
-            //     this.setState({ name: this.props.name, age: this.props.age, avatar: this.props.avatar, sport: this.props.sport, level: this.props.level });
-            // }
 
             render() {
                 return (
