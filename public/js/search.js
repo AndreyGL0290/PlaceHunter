@@ -1,12 +1,10 @@
+import { loadPreferCard, loadUserCard, loadLocCard } from '../react/search.js'
+
 // Исправление отступа от header
 const headerHeight = document.getElementById('header').clientHeight + 'px';
 document.getElementById('content-container').style.marginTop = headerHeight;
 
 let recievedData;
-
-// Проверяем есть ли у браузера пользователя возможность передовать его местоположение
-let geo = false;
-if (navigator.geolocation) geo = true;
 
 // Первый запрос нужен чтобы получить списки видов спорта и уровней
 const request = new XMLHttpRequest;
@@ -14,8 +12,12 @@ request.open('POST', '', true);
 request.setRequestHeader("Content-Type", "application/json");
 request.addEventListener("load", function () {
     recievedData = JSON.parse(request.response);
+    
+    // Заменяет бд
     const sports = recievedData.sports;
     const levels = recievedData.levels;
+    const cities = recievedData.cities;
+    const districts = recievedData.districts;
 
     // Второй запрос нужен чтобы определить как перешел user на эту страницу (по ссылке с указанным видом спорта в GET запросе или нет)
     const request1 = new XMLHttpRequest;
@@ -30,6 +32,7 @@ request.addEventListener("load", function () {
                 // Выделять блок красным если нет совпадений, зеленым если есть совпадения
                 document.getElementsByClassName('card')[0].style.backgroundColor = '#90ee90';
             });
+            loadLocCard(cities, districts)
             loadUserCard(recievedData.matches)
 
 
@@ -105,89 +108,3 @@ request.addEventListener("load", function () {
 })
 
 request.send(JSON.stringify({ getLists: true }));
-
-
-
-// Сделать перезагрузку вариантов по нажатию кнопки
-function loadUserCard(matches, error) {
-    if (!error) {
-        class App extends React.Component {
-            constructor(props) {
-                super(props);
-                this.state = { matches: props.matches };
-            }
-
-            render() {
-                return (
-                    <div className='usercard-container'>
-                        {[...Array(this.props.matches.length)].map((n, i) => <Usercard name={this.state.matches[i].user_name} age={this.state.matches[i].age} avatar={this.state.matches[i].acc_image} sport={this.state.matches[i].sport} level={this.state.matches[i].game_level} key={i}/>)}
-                    </div>)
-            }
-        }
-
-        ReactDOM.render(<App matches={matches} />, document.getElementById('variants'));
-    } else {
-        ReactDOM.render(<div className="filter-error-container"><p className="filter-error">{error}</p></div>, document.getElementById('variants'));
-    }
-}
-
-function loadPreferCard(sports, levels, sport, level, callback) {
-    const app = (
-        <Prefcard sports={sports} levels={levels} sport={sport} level={level} />
-    );
-
-    ReactDOM.render(app, document.getElementsByClassName('cards-container')[0]);
-
-    // Меняет DOM элементы страницы после их инициализации
-    callback();
-}
-
-
-
-// React functions
-
-function Prefcard(props) {
-    return (
-        <div className="card">
-            <form name="direction" className="form">
-                <label className="card-text">Вид спорта
-                    <input list="sport" className="card-input" name="sport" defaultValue={props.sport} />
-                </label>
-                <datalist id="sport">
-                    <Create_datalist length={props.sports.length} list={props.sports} />
-                </datalist>
-
-                <label className="card-text">Уровень игры
-                    <input list="level" className="card-input" name="level" defaultValue={props.level} />
-                </label>
-                <datalist id="level">
-                    <Create_datalist length={props.levels.length} list={props.levels} />
-                </datalist>
-            </form>
-        </div>
-    )
-}
-
-function Create_datalist(props) {
-    return (
-        <div>
-            {[...Array(props.length)].map((n, i) => <option key={props.list[i]}>{props.list[i]}</option>)}
-        </div>
-    )
-}
-
-function Usercard(props) {
-    return (
-        <div className="user-card">
-            <div className="card-image">
-                <img className="search-avatar" src={props.avatar} alt='Аватар' />
-            </div>
-            <div className="card-info">
-                <p className="user-name">Имя: {props.name}</p>
-                <p className="user-age">Возраст: {props.age}</p>
-                <p className="user-sport">Игра: {props.sport}</p>
-                <p className="user-level">Уровень: {props.level}</p>
-            </div>
-        </div>
-    )
-}
