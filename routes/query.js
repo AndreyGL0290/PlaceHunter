@@ -40,6 +40,9 @@ const RootQuery = new GraphQLObjectType({
     })
 })
 
+
+// Further we can use it in order to retrieve information about sport courts in a region and it crowdedness
+
 const schema = new GraphQLSchema({
     query: RootQuery
 })
