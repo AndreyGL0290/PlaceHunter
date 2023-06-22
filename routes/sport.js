@@ -5,20 +5,6 @@ const { requiresAuth } = require('express-openid-connect');
 // Reads .env file
 dotenv.config()
 
-
-// Mysql server configuration
-// const con = mysql.createConnection({
-//     host: "localhost",
-//     port: 3066,
-//     user: "root",
-//     password: process.env.MYSQL_PASSWORD,
-//     database: "userinfo"
-// });
-
-// con.connect(function (err) {
-//     if (err) throw err;
-// });
-
 // Default middleware function
 router.use(function sportType(req, res, next) {
     next();
@@ -36,7 +22,7 @@ let cities = ['Новосибирск']
 let districts = ['Дзержинский район', 'Железнодорожный район', 'Заельлцовский район', 'Калининский район', 'Кировский район', 'Ленинский район', 'Октябрьский район', 'Первомайский район', 'Советский район', 'Центральный район']
 
 // Для сообщения обеих и более сторон использовать уже созданные сервисы по типу телеграмма и других соц. сетей
-// На submitpref перезагружаьт страницу (динамически добавлять элементы)
+// На submitpref перезагружать страницу (динамически добавлять элементы)
 router.post('', (req, res) => {
     // Ответ на самый первый запрос, который запрашивает списки вариантов
     if (req.body.getLists) {
