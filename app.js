@@ -1,10 +1,11 @@
 // Import
 const { auth } = require('express-openid-connect');
+const graphqlRouter = require('./routes/query');
 const sportRouter = require('./routes/sport');
 const authRouter = require('./routes/auth');
 const express = require('express');
 const dotenv = require('dotenv');
-const logger = require('morgan')
+const logger = require('morgan');
 const path = require('path');
 
 // Reads .env file
@@ -46,6 +47,7 @@ app.use(function (req, res, next) {
 
 app.use('/', authRouter)
 app.use('/sport', sportRouter);
+app.use('/graphql', graphqlRouter)
 
 // Listen on port 8080
 app.listen(port);
