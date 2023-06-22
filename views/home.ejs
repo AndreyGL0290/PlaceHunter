@@ -13,11 +13,15 @@
 <body>
     <img id='image' src='img/Баскетбол.jpg'>
     <div id='layer'></div>
-    <div id='header'></div>
+    <div id='header'>
+        <% if (!locals.isAuthenticated) { %>
+            <a class='button reg' href='/login'>Sign In</a>
+        <% } %>
+
+    </div>
     <div id="content-container">
         <div class='error-container'>
             <span class='error-label'></span>
-            <a id='clear' href=''>Отчистить кукисы</a>
         </div>
         <div id='about-container'>
             <div id="offers-container">
@@ -49,41 +53,11 @@
                     src="https://images.wallpaperscraft.ru/image/snoubord_tryuk_pryzhok_gory_ekstrim_79976_320x480.jpg">
                 <div id='info-text'>
                     <h2>Our main rule</h2>
-                    <p>You have to be polite with every person that you found here...<br></p>
-                    <p>Even if he playing bad</p>
+                    <p>You have to be polite with every person that you have found here no matter what!</p>
                 </div>
             </div>
         </div>
     </div>
-    <template id='account-template'>
-        <style>
-            #account-conteiner {
-                display: flex;
-                justify-content: space-around;
-                height: 64px;
-                width: 10%;
-            }
-
-            #account-img-container {
-                position: relative;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                width: 64px;
-                height: 64px;
-                border-radius: 50%;
-                background-color: grey;
-            }
-
-            #account-img {
-                width: 32px;
-                height: auto;
-            }
-        </style>
-        <a id='account-img-container' href='/account'>
-            <img id="account-img" src="https://image.flaticon.com/icons/png/512/561/561196.png">
-        </a>
-    </template>
     <template id='signup-template'>
         <style>
             .reg {

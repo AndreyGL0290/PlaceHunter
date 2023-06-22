@@ -1,43 +1,30 @@
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const express = require('express');
+var router = require('express').Router();
 const dotenv = require('dotenv');
-const mysql = require('mysql2');
-const { checkTokenCookie } = require('../middlewares/checktoken');
-const router = express.Router();
+const { requiresAuth } = require('express-openid-connect');
+
 // Reads .env file
 dotenv.config()
 
 
 // Mysql server configuration
-const con = mysql.createConnection({
-    host: "localhost",
-    port: 3306,
-    user: "root",
-    password: process.env.MYSQL_PASSWORD,
-    database: "userinfo"
-});
+// const con = mysql.createConnection({
+//     host: "localhost",
+//     port: 3066,
+//     user: "root",
+//     password: process.env.MYSQL_PASSWORD,
+//     database: "userinfo"
+// });
 
-con.connect(function (err) {
-    if (err) throw err;
-});
-
-// Static Files
-router.use(express.static('public'));
-router.use('/css', express.static(__dirname + 'public/css'));
-router.use('/img', express.static(__dirname + 'public/img'));
-router.use('/js', express.static(__dirname + 'public/js'));
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(cookieParser());
-
-const jsonParser = express.json();
+// con.connect(function (err) {
+//     if (err) throw err;
+// });
 
 // Default middleware function
 router.use(function sportType(req, res, next) {
     next();
 });
 
-router.get('', checkTokenCookie, (req, res) => {
+router.get('', requiresAuth, (req, res) => {
     res.render('sport');
 });
 
@@ -50,7 +37,7 @@ let districts = ['Дзержинский район', 'Железнодорож�
 
 // Для сообщения обеих и более сторон использовать уже созданные сервисы по типу телеграмма и других соц. сетей
 // На submitpref перезагружаьт страницу (динамически добавлять элементы)
-router.post('', jsonParser, (req, res) => {
+router.post('', (req, res) => {
     // Ответ на самый первый запрос, который запрашивает списки вариантов
     if (req.body.getLists) {
         return res.json({ sports: sports, levels: levels, cities: cities, districts: districts });
