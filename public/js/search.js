@@ -1,110 +1,64 @@
-import { loadPreferCard, loadUserCard, loadLocCard } from '../react/search.js'
+const R = 6371
+const r = 10
+const milesRate = 0.621371
 
-// Исправление отступа от header
-const headerHeight = document.getElementById('header').clientHeight + 'px';
-document.getElementById('content-container').style.marginTop = headerHeight;
-
-let recievedData;
-
-// Первый запрос нужен чтобы получить списки видов спорта и уровней
-const request = new XMLHttpRequest;
-request.open('POST', '', true);
-request.setRequestHeader("Content-Type", "application/json");
-request.addEventListener("load", function () {
-    recievedData = JSON.parse(request.response);
-    
-    // Заменяет бд
-    const sports = recievedData.sports;
-    const levels = recievedData.levels;
-    const cities = recievedData.cities;
-    const districts = recievedData.districts;
-
-    // Второй запрос нужен чтобы определить как перешел user на эту страницу (по ссылке с указанным видом спорта в GET запросе или нет)
-    const request1 = new XMLHttpRequest;
-    request1.open('POST', '', true);
-    request1.setRequestHeader("Content-Type", "application/json");
-    request1.addEventListener("load", function () {
-        recievedData = JSON.parse(request1.response);
-        // Если перешли по ссылке с уже указанным видом спорта в GET запросе
-        const sportType = recievedData.sportType;
-        if (sportType) {
-            loadPreferCard(sports, levels, sportType, 'Любой', () => {
-                // Выделять блок красным если нет совпадений, зеленым если есть совпадения
-                document.getElementsByClassName('card')[0].style.backgroundColor = '#90ee90';
-            });
-            loadLocCard(cities, districts)
-            loadUserCard(recievedData.matches)
-
-
-        }
-        // Если зашли на страницу без указанного вида спорта в GET запросе
-        else {
-            // Делаем запрос с целью узнать есть ли информация о предпочтениях человека в базе данных
-            const request2 = new XMLHttpRequest;
-            request2.open('POST', '', true);
-            request2.setRequestHeader("Content-Type", "application/json");
-            request2.addEventListener("load", function () {
-                recievedData = JSON.parse(request2.response);
-                const sport = recievedData.sport;
-                const level = recievedData.level;
-                // Если спорт не указан у user'а в БД
-                if (recievedData.error) {
-                    loadPreferCard(sports, levels, '', '', () => { });
-                    document.getElementsByClassName('filter-error')[0].textContent = 'Введите обязательные фильтры';
-                }
-                // Если спорт действительно есть у user'а в БД
-                else {
-                    loadPreferCard(sports, levels, sport, level, () => {
-                        document.getElementsByClassName('card')[0].style.backgroundColor = '#90ee90';
-                    });
-
-                    // Если есть совпадения
-                    if (recievedData.matches.length !== 0) {
-                        // Выводим совпадения на экран
-                        loadUserCard(recievedData.matches);
-                    }
-                    // Если НЕТ совпадений
-                    else {
-                        loadUserCard(recievedData.mathes, 'Совпадений не найдено');
-                    }
-                }
-            })
-
-            request2.send(JSON.stringify({ getPreferences: true }));
-        }
-    })
-    request1.send();
-
-    // При нажатии на кнопку смены фильтров менять их в БД (если фильтры небыли изменены, то можно их и не менять)
-    // Также нужно проверять валидность введеных значений
-    let submit = document.getElementById('submit');
-    submit.addEventListener('click', function (e) {
-        e.preventDefault();
-        let formName = document.getElementsByClassName('form')[0].getAttribute('name');
-        const updateSport = document.forms[formName].elements['sport'].value;
-        const updateLevel = document.forms[formName].elements['level'].value;
-
-        const request3 = new XMLHttpRequest;
-        request3.open('POST', '', true);
-        request3.setRequestHeader("Content-Type", "application/json");
-        request3.addEventListener("load", function () {
-            let recievedData = JSON.parse(request3.response);
-            // Если есть совпадения
-            if (recievedData.matches.length !== 0) {
-                // Выводим совпадения на экран
-                loadUserCard(recievedData.matches);
-            }
-            // Если НЕТ совпадений
-            else {
-                loadUserCard(recievedData.matches, 'Совпадений не найдено');
-            }
-        })
-        // Если значения введенные юзером есть в списках допустимых значений, то отправляем их в БД через сервер
-        if (sports.includes(updateSport) && levels.includes(updateLevel)) request3.send(JSON.stringify({ getPreferences: true, updatePreferences: true, sport: updateSport, level: updateLevel }));
-        // Иначе отправляем дефолтные ''
-        else { request3.send(JSON.stringify({ getPreferences: true, updatePreferences: true, sport: '', level: '' })); }
-    }, true);
-
+const button = document.getElementById('near-me')
+button.addEventListener('click', (e) => {
+    e.preventDefault()
+    navigator.geolocation.getCurrentPosition(success, error)
 })
 
-request.send(JSON.stringify({ getLists: true }));
+// We can retrieve results inside bounding box with following request
+// GET /api/0.6/map?bbox=left,bottom,right,top
+
+const success = async (geoPos) => {
+    const lat = geoPos.coords.latitude;
+    const lon = geoPos.coords.longitude;
+
+    const C = 2 * Math.PI * R
+    const dy = 360 * r / C;
+    const dx = dy * Math.cos(lat*Math.PI/180);
+    let customBbox = [lat-dy, lon-dx, lat+dy, lon+dx];
+
+    let res = await graphqlQuery(`
+    {
+        location(lat: ${lat}, lon: ${lon}) {
+            boundingbox
+        }
+    }
+    `)
+
+    let bbox = res.data.location.boundingbox
+    bbox = [bbox[0], bbox[2], bbox[1], bbox[3]]
+
+    let dest = document.getElementById('dest').value
+    console.log(typeof dest, dest)
+    
+    res = await graphqlQuery(`
+    {
+        places(x1: ${customBbox[1]}, y1: ${customBbox[0]}, x2: ${customBbox[3]}, y2: ${customBbox[2]}, dest: "${dest}") {
+            display_name
+        }
+    }
+    `)
+    console.log(res.data.places)
+
+    let resultContainer = document.getElementById('result-container')
+    for (let i in res.data.places) {
+        let ul = document.createElement('ul')
+        ul.innerText = res.data.places[i].display_name
+        resultContainer.appendChild(ul)
+    }
+};
+
+const error = (err) => {
+    console.log(err)
+};
+
+const graphqlQuery = async (query) => {
+    return (await fetch('http://localhost:8080/graphql', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query })
+    })).json()
+}
