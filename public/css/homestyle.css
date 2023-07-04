@@ -29,21 +29,6 @@ p, span {
     height: 100%;
 }
 
-#header {
-    z-index: 1;
-    position: fixed;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    background-color: lightgrey;
-    width: 1000px;
-    height: 7%;
-}
-
 #entrance-container {
     display: flex;
     justify-content:space-around;
@@ -58,7 +43,7 @@ p, span {
     right: 0;
     position: absolute;
     width: 1000px;
-    height: 93%;
+    height: 100%;
     background-color: white;
 }
 
