@@ -1,4 +1,4 @@
-import { placeOSM } from "../types/global"
+import { placeOSM } from "../types/global";
 
 export function Place ({ place }: { place: placeOSM }){
     return (
@@ -20,7 +20,7 @@ export function PlacesList({ places }: { places: placeOSM[] }) {
     return (
         <>
             {places.map(place => (
-                <Place place={place} key={place.display_name}/>
+                <Place place={place}/>
             ))}
         </>
     )
