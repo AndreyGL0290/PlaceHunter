@@ -3,7 +3,7 @@ import { placeOSM } from "../types/global";
 export const success = async (geoPos: GeolocationPosition, updateData: Function) => {
     const R = 6371
     const r = 10
-    const milesRate = 0.621371
+    // const milesRate = 0.621371
     const lat = geoPos.coords.latitude;
     const lon = geoPos.coords.longitude;
 
