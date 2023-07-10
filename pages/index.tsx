@@ -3,7 +3,7 @@ import { getSession } from '@auth0/nextjs-auth0';
 
 import mongoConnect from '../mongoDB/connect';
 
-export default function Page({ props }) {
+export default function Home({ props }) {
     const { error } = useUser();
     if (error) return <pre>{ error.message }</pre>;
     return (
