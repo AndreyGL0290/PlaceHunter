@@ -14,8 +14,9 @@ export const success = async (geoPos: GeolocationPosition, updateData: Function)
     let customBbox = [lon-dy, lat-dx, lon+dy, lat+dx];
 
     let dest = document.getElementsByTagName('input')[0];
-    let res: placeOSM = await fetch(`https://nominatim.openstreetmap.org/search.php?q=${dest.value}&viewbox=${customBbox[0]}%2C${customBbox[1]}%2C${customBbox[2]}%2C${customBbox[3]}&bounded=1&format=json`).then( res => (res.json()));
-
+    let res = await fetch(`http://localhost:3000/api/fetchPlaces?place=${dest.value}&viewbox=${customBbox[0]}%2C${customBbox[1]}%2C${customBbox[2]}%2C${customBbox[3]}`).then(res => (res.json()))
+    // let res: placeOSM = await fetch(`https://nominatim.openstreetmap.org/search.php?q=${dest.value}&viewbox=${customBbox[0]}%2C${customBbox[1]}%2C${customBbox[2]}%2C${customBbox[3]}&bounded=1&format=json`).then( res => (res.json()));
+    console.log(res)
     updateData(res)
 };
 
