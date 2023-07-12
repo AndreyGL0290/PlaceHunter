@@ -4,6 +4,7 @@
   "description": "App that find you a teammate for sport exersizes",
   "main": "start.js",
   "scripts": {
+    "tailwind:css": "postcss public/css/global.css -o public/css/style.css",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js"
   },
@@ -18,8 +19,6 @@
   },
   "homepage": "https://github.com/AndreyGL0290/SportBook#readme",
   "dependencies": {
-    "bcrypt": "^5.0.1",
-    "cookie-parser": "^1.4.0",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
@@ -28,14 +27,13 @@
     "graphql": "^15.8.0",
     "http-errors": "~1.8.1",
     "mongodb": "^5.6.0",
-    "mongoose": "^7.3.0",
     "morgan": "~1.10.0",
-    "mysql2": "^2.3.0",
-    "nodemailer": "^6.6.3",
-    "password-validator": "^5.1.1",
-    "validator": "^13.6.0"
+    "postcss-cli": "^10.1.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "autoprefixer": "^10.4.14",
+    "nodemon": "^2.0.12",
+    "postcss": "^8.4.25",
+    "tailwindcss": "^3.3.2"
   }
 }
