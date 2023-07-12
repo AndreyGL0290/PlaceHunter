@@ -1,0 +1,18 @@
+<header>
+    <div class="h-28 grid grid-cols-3 text-center bg-black text-white text-2xl [&_a]:navbar-button">
+        <h1 class="font-bold text-xl text-white absolute left-2 top-0 phone:left-auto">Place Hunter</h1>
+        <div class="navbar-div">
+            <a href='/about'>About</a>
+        </div>
+        <div class="navbar-div">
+            <% if (locals.button) { %>
+                <a href=<%= locals.button.href %>><%= locals.button.label %></a>
+            <% } else { %>
+                <a href='/'>Home</a>
+            <% } %>
+        </div>
+        <div class="navbar-div">
+            <a href="#footer">Contact Us</a>
+        </div>
+    </div>
+</header>
