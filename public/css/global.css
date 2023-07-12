@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .navbar-div {
+        @apply flex items-center justify-center;
+    }
+
+    .navbar-button {
+        @apply transition ease-in-out hover:scale-125;
+    }
+}
