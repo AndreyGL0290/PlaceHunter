@@ -6,14 +6,17 @@ bin-release/
 
 # Other files and folders
 .settings/
-node_modules/*
+node_modules/
 
 # Executables
 *.swf
 *.air
 *.ipa
 *.apk
+
+# Environmental variables
 *.env
+*.local
 
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
 # should NOT be excluded as they contain compiler settings and other important
