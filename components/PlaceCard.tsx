@@ -10,7 +10,6 @@ export function Place ({ place }: { place: placeOSM }){
             </div>
             <div className="h-full w-3/4 flex flex-col justify-evenly items-center text-justify mx-5">
                 <p className="font-mono text-slate-900">{place.display_name}</p>
-                <button className="px-20 py-2 rounded-lg bg-beige-200 transition ease-in-out hover:bg-beige-300 hover:scale-105">More</button>
             </div>
         </div>    
     )
