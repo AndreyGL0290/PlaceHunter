@@ -29,8 +29,8 @@ export async function getServerSideProps({ req, res }) {
     const users = await mongoConnect(process.env.DB, 'User')
     
     // Create db record if user is not in db yet
-    const inDB = session ? (await users.find({ userId: session.user.sid }).toArray())[0] : false
-    if (session !== null && !inDB) users.insertOne({ userId: session.user.sid })
+    const inDB = session ? (await users.find({ userId: session.user.sub }).toArray())[0] : false
+    if (session !== null && !inDB) users.insertOne({ userId: session.user.sub })
 
     return {
         props: {}
