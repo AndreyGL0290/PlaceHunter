@@ -9,7 +9,7 @@ router.get('/', async function (req, res, next) {
   }
 
   res.render('home', {
-    title: 'Auth0 Webapp sample Nodejs',
+    title: 'PlaceHunter',
     isAuthenticated: req.oidc.isAuthenticated()
   });
 });
