@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('utils/Head') %>
+</head>
+
+<body class="flex flex-col h-screen">
+    <%- include('utils/NavBar') %>
+    <div class="flex-grow">
+        <div class='h-80 flex flex-col justify-center items-center'>
+            <input id="search-input" class="w-1/2 mb-4 text-center bg-[#f3ebe8] rounded-lg border-solid border-[2px] border-black placeholder:text-center placeholder:text-black" placeholder="What are You looking for?" />
+            <button id='search' class="px-[10%] py-1 rounded-lg bg-beige-200 transition ease-in-out hover:bg-beige-100 hover:scale-105">Search</button>
+        </div>
+        <div id="result-box" class='grid grid-cols-2 mb-20 gap-x-[5%] gap-y-24 mx-10 phone:grid-cols-1 tablet:grid-cols-1'>
+            
+        </div>
+    </div>
+    <%- include('utils/Footer') %>
+    <script type='module' src="js/search.js"></script>
+</body>
+
+</html>
