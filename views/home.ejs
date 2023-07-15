@@ -2,17 +2,12 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="https://image.flaticon.com/icons/png/512/857/857455.png" type="image/x-icon">
-    <link rel="stylesheet" href="css/style.css">
-    <title>PlaceHunter</title>
+    <%- include('utils/Head') %>
 </head>
 
-<body>
+<body class="flex flex-col h-screen">
     <%- include('utils/NavBar', {button: {label: 'Search', href: '/search'}}) %>
-    <div class='h-screen flex flex-col justify-evenly'>
+    <div class='flex flex-grow flex-col justify-evenly'>
         <div class='flex justify-evenly items-center mx-7 phone:flex-col'>
             <div class='w-1/2 phone:w-full phone:text-center'>
                 <h1 class='text-5xl mb-2 phone:text-4xl tablet:text-4xl'>Explore the world around You</h1>
