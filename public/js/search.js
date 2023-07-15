@@ -2,14 +2,15 @@ const R = 6371
 const r = 10
 const milesRate = 0.621371
 
-const button = document.getElementById('near-me')
+const inputField = document.getElementById('search-input');
+inputField.addEventListener('focusin', e => e.currentTarget.placeholder='')
+inputField.addEventListener('focusout', e => e.currentTarget.placeholder = 'What are You looking for?')
+
+const button = document.getElementById('search')
 button.addEventListener('click', (e) => {
     e.preventDefault()
-    navigator.geolocation.getCurrentPosition(success, error)
+    if (inputField.value) navigator.geolocation.getCurrentPosition(success, error);
 })
-
-// We can retrieve results inside bounding box with following request
-// GET /api/0.6/map?bbox=left,bottom,right,top
 
 const success = async (geoPos) => {
     const lat = geoPos.coords.latitude;
@@ -31,27 +32,27 @@ const success = async (geoPos) => {
     let bbox = res.data.location.boundingbox
     bbox = [bbox[0], bbox[2], bbox[1], bbox[3]]
 
-    let dest = document.getElementById('dest').value
+    let dest = document.getElementById('search-input').value
     console.log(typeof dest, dest)
     
     res = await graphqlQuery(`
     {
         places(x1: ${customBbox[1]}, y1: ${customBbox[0]}, x2: ${customBbox[3]}, y2: ${customBbox[2]}, dest: "${dest}") {
             display_name
+            icon
         }
     }
-    `)
-    console.log(res.data.places)
+    `);
 
-    let resultContainer = document.getElementById('result-container')
+    let resultContainer = document.getElementById('result-box');
+    resultContainer.innerHTML = '';
     for (let i in res.data.places) {
-        let ul = document.createElement('ul')
-        ul.innerText = res.data.places[i].display_name
-        resultContainer.appendChild(ul)
+        PlaceCard(res.data.places[i], resultContainer)
     }
 };
 
 const error = (err) => {
+    alert('An geolocation error occurred')
     console.log(err)
 };
 
@@ -61,4 +62,29 @@ const graphqlQuery = async (query) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query })
     })).json()
+}
+
+const PlaceCard = (place, root) => {
+    let card = document.createElement('div');
+    card.className = 'h-80 flex flex-row justify-evenly rounded-xl bg-beige-100';
+    let imageContainer = document.createElement('div');
+    imageContainer.className = 'flex justify-center items-center';
+    let imagebg = document.createElement('div');
+    imagebg.className = 'h-5/6 w-36 flex justify-center items-center bg-martinique-950';
+    let image = document.createElement('img');
+    image.className = 'h-40 w-40';
+    let contentContainer = document.createElement('div');
+    contentContainer.className = 'h-full w-3/4 flex flex-col justify-evenly items-center text-justify mx-5';
+    let address = document.createElement('p');
+    address.className = 'font-mono text-slate-900';
+
+    address.textContent = place.display_name;
+    contentContainer.appendChild(address);
+    image.src = place.icon;
+    imagebg.appendChild(image);
+    imageContainer.appendChild(imagebg);
+    card.appendChild(imageContainer);
+    card.appendChild(contentContainer);
+
+    root.appendChild(card);
 }
