@@ -10,4 +10,12 @@
     .navbar-button {
         @apply transition ease-in-out hover:scale-125;
     }
+
+    .techstack-header {
+        @apply font-semibold text-2xl mt-5
+    }
+
+    .techstack-item {
+        @apply text-xl
+    }
 }
