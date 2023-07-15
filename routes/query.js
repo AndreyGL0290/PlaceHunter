@@ -9,8 +9,7 @@ const {
     GraphQLList,
     GraphQLString,
     GraphQLNonNull,
-    GraphQLFloat,
-    GraphQLScalarType
+    GraphQLFloat
 } = require('graphql')
 
 const user = new GraphQLObjectType({
@@ -62,6 +61,7 @@ const place = new GraphQLObjectType({
         display_name: { type: GraphQLString },
         class: { type: GraphQLString },
         type: { type: GraphQLString },
+        icon: { type: GraphQLString },
         lon: { type: GraphQLFloat },
         lat: { type: GraphQLFloat }
     })
