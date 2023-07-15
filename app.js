@@ -1,7 +1,8 @@
 // Import
 const { auth } = require('express-openid-connect');
 const graphqlRouter = require('./routes/query');
-const sportRouter = require('./routes/sport');
+const searchRouter = require('./routes/search');
+const aboutRouter = require('./routes/about');
 const authRouter = require('./routes/auth');
 const express = require('express');
 const dotenv = require('dotenv');
@@ -45,9 +46,10 @@ app.use(function (req, res, next) {
      next();
 });
 
-app.use('/', authRouter)
-app.use('/sport', sportRouter);
-app.use('/graphql', graphqlRouter)
+app.use('/', authRouter);
+app.use('/search', searchRouter);
+app.use('/graphql', graphqlRouter);
+app.use('/about', aboutRouter);
 
 // Listen on port 8080
 app.listen(port);
