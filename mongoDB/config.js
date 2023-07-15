@@ -9,9 +9,6 @@ client.connect()
 const db = client.db(dbName)
 const users = db.collection('User')
 
-// users.deleteOne({ name: 'Andrew'})
-users.find({ }).toArray().then(data => {console.log(data)})
-
 module.exports = {
     users
 }
