@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('utils/Head') %>
+</head>
+<body class="flex flex-col h-screen">
+    <%- include('utils/NavBar') %>
+    <div class="flex flex-col flex-grow items-center">
+        <div class="my-10 grid grid-col-3 grid-row-2 gap-x-60 gap-y-10">
+            <p class="w-80 text-xl col-start-1 row-start-1 text-justify">PlaceHunter is a small project built to improve both my front and back end skills</p>
+            <p class="w-80 text-xl col-start-2 row-start-2 text-justify">It has two instances. This one is built using express.js and can be found <a href="https://github.com/AndreyGL0290/SportBook/blob/main" class="font-medium italic">~here~</a></p>
+        </div>
+        <p class="text-xl">Tech stack used in <select class="text-center border-2 rounded-lg" name="instance-choose" id="instance-choose"><option value="1" label="first"></option><option value="2" label="second"></option></select> instance</p>
+        <div class="w-screen">
+            <div id="tech-stack" class="text-center grid grid-cols-3 gap-y-10">
+                <div>
+                    <h1 class="techstack-header">JS frameworks and extensions</h1>
+                    <p class="techstack-item">Express.JS</p>
+                    <p class="techstack-item">TypeScript</p>
+                </div>
+                <div>
+                    <h1 class="techstack-header">Template Language</h1>
+                    <p class="techstack-item">Embedded JS</p>
+                </div>
+
+                <div>
+                    <h1 class="techstack-header">Style</h1>
+                    <p class="techstack-item">TailwindCSS</p>
+                </div>
+                
+                <div>
+                    <h1 class="techstack-header">API's</h1>
+                    <p class="techstack-item">Auth0 API</p>
+                    <p class="techstack-item">OSM API</p>
+                    <p class="techstack-item">Geolocation API</p>
+                </div>
+                
+                <div>
+                    <h1 class="techstack-header">Database</h1>
+                    <p class="techstack-item">MongoDB</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include('utils/Footer') %>
+    <script type='module' src="js/about.js"></script>
+</body>
+</html>
