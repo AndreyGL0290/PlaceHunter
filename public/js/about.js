@@ -13,7 +13,7 @@ select.addEventListener('change', e => {
 })
 
 const firstStack = () => {
-    
+
 }
 
 const secondStack = () => {
