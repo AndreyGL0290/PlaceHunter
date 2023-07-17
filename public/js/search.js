@@ -69,8 +69,10 @@ const PlaceCard = (place, root) => {
     card.className = 'h-80 flex flex-row justify-evenly rounded-xl bg-beige-100';
     let imageContainer = document.createElement('div');
     imageContainer.className = 'flex justify-center items-center';
+    let imagebg2 = document.createElement('div');
+    imagebg2.className = 'h-5/6 w-36 bg-martinique-950 ml-5';
     let imagebg = document.createElement('div');
-    imagebg.className = 'h-5/6 w-36 flex justify-center items-center bg-martinique-950';
+    imagebg.className = 'w-full h-full flex justify-center items-center relative left-2 bottom-2 bg-tabasco-300';
     let image = document.createElement('img');
     image.className = 'h-40 w-40';
     let contentContainer = document.createElement('div');
@@ -80,9 +82,12 @@ const PlaceCard = (place, root) => {
 
     address.textContent = place.display_name;
     contentContainer.appendChild(address);
+
     image.src = place.icon;
     imagebg.appendChild(image);
-    imageContainer.appendChild(imagebg);
+    imagebg2.appendChild(imagebg);
+    imageContainer.appendChild(imagebg2);
+
     card.appendChild(imageContainer);
     card.appendChild(contentContainer);
 
