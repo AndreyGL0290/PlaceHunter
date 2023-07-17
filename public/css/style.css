@@ -506,6 +506,12 @@ video {
 .absolute {
   position: absolute;
 }
+.relative {
+  position: relative;
+}
+.bottom-2 {
+  bottom: 0.5rem;
+}
 .left-2 {
   left: 0.5rem;
 }
@@ -548,6 +554,9 @@ video {
 }
 .mb-4 {
   margin-bottom: 1rem;
+}
+.ml-5 {
+  margin-left: 1.25rem;
 }
 .mr-2 {
   margin-right: 0.5rem;
@@ -749,6 +758,10 @@ video {
 .bg-martinique-950 {
   --tw-bg-opacity: 1;
   background-color: rgb(43 42 76 / var(--tw-bg-opacity));
+}
+.bg-tabasco-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 161 160 / var(--tw-bg-opacity));
 }
 .bg-white {
   --tw-bg-opacity: 1;
