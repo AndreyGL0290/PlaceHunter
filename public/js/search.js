@@ -33,7 +33,6 @@ const success = async (geoPos) => {
     bbox = [bbox[0], bbox[2], bbox[1], bbox[3]]
 
     let dest = document.getElementById('search-input').value
-    console.log(typeof dest, dest)
     
     res = await graphqlQuery(`
     {
@@ -43,6 +42,11 @@ const success = async (geoPos) => {
         }
     }
     `);
+
+    let body = JSON.stringify({ place: dest })
+    let headers = {'Content-Type': 'application/json'}
+    // Saving data to the database
+    fetch('http://'+location.host+'/search', {method: 'POST', headers: headers, body: body})
 
     let resultContainer = document.getElementById('result-box');
     resultContainer.innerHTML = '';
