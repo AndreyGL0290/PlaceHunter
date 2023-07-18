@@ -27,12 +27,12 @@ In future it might be used for statistics collection and it further visualizatio
 ### Database
 - MongoDB
 
-## How to use
+## Setup
 In order to use this application you'll nead to create an **Auth0 account**.
 Then you'll have to setup a project and finally add up following properties to **.env file**:
 * **CLIENT_ID**: `string` - Value of "Client ID" field in project settings
 * **ISSUER_BASE_URL**: `string` - Value of "Domain" field in project settings
 * **SECRET**: `string` - Value of "Client Secret" field in project settings
 
-Additionally you'll need to specify a **PORT**: `number` variable in your .env file.
-This value represents port on which your local server will be running.
+Additionally you'll need to specify a **BASE_URL**: `string` and **PORT**: `number` variables in your .env file.
+Value of first variable represents URL on which your local server will be running and value of the second one represents the port.
