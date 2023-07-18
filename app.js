@@ -4,10 +4,12 @@ const graphqlRouter = require('./routes/query');
 const searchRouter = require('./routes/search');
 const aboutRouter = require('./routes/about');
 const authRouter = require('./routes/auth');
+const bodyParser = require('body-parser');
 const express = require('express');
 const dotenv = require('dotenv');
 const logger = require('morgan');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
 // Reads .env file
 dotenv.config()
@@ -29,7 +31,10 @@ app.use('/img', express.static(__dirname + 'public/img'));
 app.use('/js', express.static(__dirname + 'public/js'));
 app.use(express.json())
 
+app.use(cookieParser())
+
 const config = {
+     authRequired: false,
      authRequired: false,
      auth0Logout: true
 };
