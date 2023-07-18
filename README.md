@@ -24,7 +24,7 @@ In future it might be used for statistics collection and it further visualizatio
 ### Database
 - MongoDB
 
-## How to use
+## Setup
 In order to use this application you'll nead to create an **Auth0 account**.
 Then you'll have to setup a project and finally add up following properties to **.env.local file**:
 * **AUTH0_SECRET**: `string` - 32 byte string of random hexademical charachters[^1]
