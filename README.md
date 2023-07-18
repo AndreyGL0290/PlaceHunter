@@ -20,6 +20,7 @@ In future it might be used for statistics collection and it further visualizatio
 - TailwindCSS
 
 ### API's
+- GraphQL
 - Auth0 API
 - OSM API
 - Geolocation API

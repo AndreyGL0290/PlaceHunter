@@ -1,7 +1,7 @@
 let select = document.getElementsByTagName('select')[0]
 let root = document.getElementById('tech-stack')
 
-let stack1 = {'JS Frameworks and Extnsion': ['Express.JS', 'TypeScript'], 'Template Language': ['Embedded JS'], 'Style': ['TailwindCSS'], 'API\'s': ['Auth0 API', 'OSM API', 'Geolocation API'], 'Database': ['MongoDB']}
+let stack1 = {'JS Frameworks and Extnsion': ['Express.JS', 'TypeScript'], 'Template Language': ['Embedded JS'], 'Style': ['TailwindCSS'], 'API\'s': ['GraphQL', 'Auth0 API', 'OSM API', 'Geolocation API'], 'Database': ['MongoDB']}
 let stack2 = {'JS Frameworks and Extnsion': ['Next.JS', 'React', 'TypeScript'], 'Style': ['TailwindCSS'], 'API\'s': ['Auth0 API', 'OSM API', 'Geolocation API'], 'Database': ['MongoDB']}
 
 select.addEventListener('change', e => e.currentTarget.value == 1 ? buildStack(stack1) : buildStack(stack2))
