@@ -19,7 +19,7 @@ export function PlacesList({ places }: { places: placeOSM[] }) {
     return (
         <>
             {places.map(place => (
-                <Place place={place}/>
+                <Place place={place} key={place.display_name}/>
             ))}
         </>
     )
