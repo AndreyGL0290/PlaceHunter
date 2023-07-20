@@ -1,7 +1,6 @@
-import { UserProfile, useUser } from "@auth0/nextjs-auth0/client";
 import { placeOSM } from "../types/global";
 
-export const success = async (geoPos: GeolocationPosition, updateData: Function, user: UserProfile) => {
+export const success = async (geoPos: GeolocationPosition, updateData: Function) => {
     const R = 6371
     const r = 10
     // const milesRate = 0.621371
@@ -17,7 +16,7 @@ export const success = async (geoPos: GeolocationPosition, updateData: Function,
     let dest = document.getElementsByTagName('input')[0].value;
 
     // Saves query data to db
-    let body = { place: dest, user: user }
+    let body = { place: dest }
     fetch('http://localhost:3000/api/saveQueryData', {method: 'POST', headers: {'Content-Tyepe': 'application/json'}, body: JSON.stringify(body)})
 
     let res: placeOSM = await fetch(`https://nominatim.openstreetmap.org/search.php?q=${dest}&viewbox=${customBbox[0]}%2C${customBbox[1]}%2C${customBbox[2]}%2C${customBbox[3]}&bounded=1&format=json`).then( res => (res.json()));
