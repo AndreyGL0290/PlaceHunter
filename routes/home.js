@@ -17,7 +17,7 @@ router.get('/profile', requiresAuth(), async function (req, res, next) {
     keys = Object.keys(user.queries)
     largest = Math.max.apply(null, keys.map(x => user.queries[x]))
     result = keys.reduce((result, key) => { if (user.queries[key] === largest){ result.push(key); } return result; }, []);
-    statistic = user ? 'Most searched by You: '+result[0] : 'No queries have been done yet'
+    statistic = user ? result[0]+' - '+largest : 'N/A'
   }
 
   res.render('profile', {
