@@ -2,7 +2,7 @@
 module.exports = {
   content: [
     "views/**/*.ejs",
-    "public/js/search.js",
+    "public/js/*.js",
     "public/css/global.css"
   ],
   theme: {
