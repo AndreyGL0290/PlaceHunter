@@ -1,8 +1,8 @@
 import { useUser } from '@auth0/nextjs-auth0/client'
 import { useState } from 'react'
 
-import { error, success } from "../../utils/geoPos"
 import { PlacesList } from "../../components/PlaceCard"
+import { error, success } from "../../utils/geoPos"
 import { placeOSM } from "../../types/global"
 
 export default function Places() {
